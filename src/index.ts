@@ -17,7 +17,6 @@ export interface ITrancoRanking {
     domain: string;
 };
 
-
 export interface ICWVResults {
     lcp: number | undefined;
     fid: number | undefined;
@@ -36,7 +35,7 @@ const main = async () => {
     Read the domain rankings from the Tranco CSV file within the specified range
     readTrancoRankingCsv() takes 3 arguments: (pathToCsvFile, fromRank, toRank)
     Modify fromRank & toRank to set a different range
-    1 < fromRank, toRank <= 1'000'000 and fromRank <= toRank
+    1 <= fromRank <= 1'000'000, 1<= toRank <= 1'000'000 where fromRank <= toRank
     */
     const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
 
