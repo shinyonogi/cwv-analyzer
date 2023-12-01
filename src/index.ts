@@ -4,10 +4,8 @@ import { readTrancoRankingsCsv, initializeVitalsReportCsv, writeVitalsToCsv } fr
 import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./browserSessionManager.js";
 import { measureCWVOnBrowserPage } from "./coreWebVitalsAuditor.js";
 
-
 const TRANCO_CSV_FILE_PATH: string = './csvData/top-1m.csv';
 const VITALS_REPORT_CSV_FILE_PATH: string = './csvData/CoreWebVitalsReport.csv';
-
 
 export interface ITrancoRanking {
     rank: number;
