@@ -39,14 +39,13 @@ const main = async () => {
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
+        let page: Page | null = null;
         try {
-            const page: Page = await openPageWithBrowser(browser, domain);
+            page = await openPageWithBrowser(browser, domain);
 
             const measuredCWV: ICWVResults = await measureCWVOnBrowserPage(browser, page);
 
             writeVitalsToCsv(VITALS_REPORT_CSV_FILE_PATH, rank, domain, measuredCWV);
-
-            await closeCurrentPage(page);
         }catch (pageError) {
             console.error(`Error processing domain ${rankedDomainEntry.domain}:`, pageError);
 
@@ -56,6 +55,10 @@ const main = async () => {
                 cls: undefined
             }
             writeVitalsToCsv(VITALS_REPORT_CSV_FILE_PATH, rank, domain, notMeasuredCWV);
+        }finally {
+            if(page) {
+                await closeCurrentPage(page);
+            }
         }
     }
 
