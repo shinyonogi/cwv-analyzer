@@ -1,17 +1,14 @@
 import { Browser, Page } from "puppeteer";
 
-// Importing helper functions from other modules
 import { readTrancoRankingsCsv, initializeVitalsReportCsv, writeVitalsToCsv } from "./csvFileManager.js";
 import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./browserSessionManager.js";
 import { measureCWVOnBrowserPage } from "./coreWebVitalsAuditor.js";
 
 
-// File paths for the CSV files
 const TRANCO_CSV_FILE_PATH: string = './csvData/top-1m.csv';
 const VITALS_REPORT_CSV_FILE_PATH: string = './csvData/CoreWebVitalsReport.csv';
 
 
-// Interfaces for Tranco List Records and Measured Core Web Vitals Results with Lighthouse
 export interface ITrancoRanking {
     rank: number;
     domain: string;
@@ -23,42 +20,47 @@ export interface ICWVResults {
     cls: number | undefined;
 };
 
-
+/**
+ * Main function to measure and record Core Web Vitals for specified domains from the Tranco list.
+ *
+ * Steps:
+ * 1. Initializes a Puppeteer browser instance for web page interactions.
+ * 2. Prepares a CSV file for recording Core Web Vitals metrics.
+ * 3. Reads a specified range of domain rankings from the Tranco CSV file.
+ * 4. For each domain, it opens the page, measures Core Web Vitals using Lighthouse, and records the results in the CSV file.
+ * 5. If an error occurs while processing a domain, it records default ('undefined') metrics for that domain in the CSV file.
+ * 6. Closes each page after processing and shuts down the browser after all domains are processed.
+ *
+ * Usage: Adjust the domain range in the call to readTrancoRankingsCsv for different sets of domains.
+ */
 const main = async () => {
-    // Initialize the browser using Puppeteer
     const browser: Browser = await initializeBrowser();
 
-    // Initialize the CSV file for storing the results
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
 
-    /*
-    Read the domain rankings from the Tranco CSV file within the specified range
-    readTrancoRankingCsv() takes 3 arguments: (pathToCsvFile, fromRank, toRank)
-    Modify fromRank & toRank to set a different range
-    1 <= fromRank <= 1'000'000, 1<= toRank <= 1'000'000 where fromRank <= toRank
-    */
+    /**
+     * readTrancoRankingCsv(pathToCsvFile, fromRank, toRank) - Reads domain rankings from the Tranco CSV file within a specified range.
+     * @param pathToCsvFile - Path to the Tranco CSV file.
+     * @param fromRank - Start rank (inclusive), 1 <= fromRank <= 1,000,000.
+     * @param toRank - End rank (inclusive), fromRank <= toRank <= 1,000,000.
+     * Example: readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10) for the top 10 domains.
+     */
     const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
 
-    // Iterate over each domain to measure its Core Web Vitals
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
         try {
-            // Open a new page in the browser for the current domain
             const page: Page = await openPageWithBrowser(browser, domain);
 
-            // Measure the Core Web Vitals for the opened page
             const measuredCWV: ICWVResults = await measureCWVOnBrowserPage(browser, page);
 
-            // Write the measured values to the CSV file
             writeVitalsToCsv(VITALS_REPORT_CSV_FILE_PATH, rank, domain, measuredCWV);
 
-            // Close the currently opened page
             await closeCurrentPage(page);
         }catch (pageError) {
             console.error(`Error processing domain ${rankedDomainEntry.domain}:`, pageError);
 
-            // In case of an error, write default 'undefined' values for CWV to the CSV file
             const notMeasuredCWV: ICWVResults = {
                 lcp: undefined,
                 fid: undefined,
@@ -68,9 +70,8 @@ const main = async () => {
         }
     }
 
-    // Close the browser after processing all domains
     await closeBrowser(browser);
 };
 
-// Execute the main function
+// Entry Point
 main();

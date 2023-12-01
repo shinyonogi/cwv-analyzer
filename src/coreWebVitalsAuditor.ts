@@ -27,12 +27,10 @@ export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Pro
     // Race the promises to either get results from Lighthouse or hit the timeout
     const lighthouseResults: Result | undefined = await Promise.race([lighthousePromise, timeoutPromise]);
 
-    // Check if Lighthouse results were successfully obtained
     if (!lighthouseResults) {
         throw Error("Lighthouse could not successfully measure the Core Web Vitals.");
     }
 
-    // Extract and return the Core Web Vitals from the Lighthouse results
     const measuredCWVResults : ICWVResults = {
         lcp: getLCP(lighthouseResults),
         fid: getFID(lighthouseResults),
@@ -58,12 +56,10 @@ export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Pro
  * - screenEmulation: Screen properties for emulation.
  */
 function configureLighthouseOptions(port: number): LighthouseOptions {
-    // Configuration options for Lighthouse
     const LIGHTHOUSE_OPTIONS: LighthouseOptions = {
         logLevel: 'info',
         output: 'json',
         onlyCategories: ['performance'],
-        // Port number of the browser has to be defined here
         port: port,
         throttling: {
             rttMs: 40,
