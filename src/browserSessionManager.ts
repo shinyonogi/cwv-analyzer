@@ -26,12 +26,13 @@ export async function openPageWithBrowser(browser: Browser, domain: string): Pro
     const page: Page = await browser.newPage();
     console.log('New Page initiated');
     try {
+        console.log(`Attempting to visit: ${url}`)
         await page.goto(url);
-        console.log(`Visited: ${url}`);
-    } catch(error) {
+        console.log(`Successfully visited: ${url}`);
+    } catch(domainError) {
         console.log(`Could not visit: ${url}`);
         await closeCurrentPage(page);
-        throw new Error(String(error));
+        throw new Error(String(domainError));
     }
 
     return page;

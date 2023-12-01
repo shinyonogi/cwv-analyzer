@@ -9,7 +9,18 @@ export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Pro
     const url: string = getUrlOfPage(page);
     const port: number = getPortOfBrowser(browser);
 
-    const lighthouseResults: Result | undefined = await runLighthouse(url, configureLighthouseOptions(port));
+    const lighthousePromise: Result | undefined = await runLighthouse(url, configureLighthouseOptions(port));
+    const timeoutPromise = new Promise<undefined>((resolve) => {
+        setTimeout(() => {
+            resolve(undefined);
+        }, 30000);
+    });
+    const lighthouseResults: Result | undefined = await Promise.race([lighthousePromise, timeoutPromise]);
+
+    if (!lighthouseResults) {
+        throw Error("Lighthouse could not successfully measure the Core Web Vitals.");
+    }
+
     const measuredCWVResults : ICWVResults = {
         lcp: getLCP(lighthouseResults),
         fid: getFID(lighthouseResults),
@@ -50,11 +61,17 @@ function configureLighthouseOptions(port: number) {
 
 
 async function runLighthouse(url: string, lighthouseOptions: LighthouseOptions): Promise<Result | undefined> {
-    const lighthouse = await import('lighthouse');
-    const runnerResult: RunnerResult | undefined = await lighthouse.default(url, lighthouseOptions);
-    const lhr: Result | undefined = runnerResult?.lhr;
+    try {
+        const lighthouse = await import('lighthouse');
+        const runnerResult: RunnerResult | undefined = await lighthouse.default(url, lighthouseOptions);
+        const lhr: Result | undefined = runnerResult?.lhr;
 
-    return lhr;
+        return lhr;
+    } catch(lighthouseError) {
+        console.log('Error measuring with Ligthouse', lighthouseError);
+
+        return undefined;
+    }
 }
 
 
