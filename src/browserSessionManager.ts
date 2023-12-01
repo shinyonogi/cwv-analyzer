@@ -16,6 +16,7 @@ export async function initializeBrowser() {
     return browser;
 };
 
+
 export async function closeBrowser(browser: Browser) {
     try {
         await browser.close();
@@ -24,6 +25,7 @@ export async function closeBrowser(browser: Browser) {
         console.error('Error closing browser:', error);
     }
 };
+
 
 export async function openPageWithBrowser(browser: Browser, domain: string) {
     const url: string = `https://www.${domain}`;
@@ -36,13 +38,21 @@ export async function openPageWithBrowser(browser: Browser, domain: string) {
     return page;
 }
 
+
 export async function closeCurrentPage(page: Page) {
-    await page.close();
+    try {
+        await page.close();
+        console.log('Successfully closed page');
+    } catch(error) {
+        console.log('Error closing page', error);
+    }
 };
+
 
 export function getPortOfBrowser(browser: Browser): number {
     return parseInt((new URL(browser.wsEndpoint())).port);
 }
+
 
 export function getUrlOfPage(page: Page): string {
     return String(new URL(page.url()));

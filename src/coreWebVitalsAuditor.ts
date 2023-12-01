@@ -26,6 +26,7 @@ function configureLighthouseOptions(port: number) {
         logLevel: 'info',
         output: 'json',
         onlyCategories: ['performance'],
+        // Port number of the browser has to be defined here:
         port: port,
         throttling: {
             rttMs: 40,
