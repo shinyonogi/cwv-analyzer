@@ -1,8 +1,8 @@
 import { Browser, Page } from "puppeteer";
 
-import { readTrancoRankingsCsv, initializeVitalsReportCsv, writeVitalsToCsv } from "./csvFileManager.js";
-import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./browserSessionManager.js";
-import { measureCWVOnBrowserPage } from "./coreWebVitalsAuditor.js";
+import { readTrancoRankingsCsv, initializeVitalsReportCsv, writeVitalsToCsv } from "./core/csvFileManager.js";
+import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./core/browserSessionManager.js";
+import { measureCWVOnBrowserPage } from "./core/coreWebVitalsAuditor.js";
 
 const TRANCO_CSV_FILE_PATH: string = './csvData/top-1m.csv';
 const VITALS_REPORT_CSV_FILE_PATH: string = './csvData/CoreWebVitalsReport.csv';

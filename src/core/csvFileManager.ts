@@ -1,7 +1,7 @@
 import fs from 'fs';
 import csv from 'csv-parser';
 
-import { ITrancoRanking, ICWVResults } from './index.js';
+import { ITrancoRanking, ICWVResults } from '../main.js';
 
 /**
  * Reads Tranco rankings from a CSV file and returns a list of rankings within the specified range.

@@ -1,7 +1,7 @@
 import { RunnerResult, Flags as LighthouseOptions, Result } from "lighthouse";
 import { Browser, Page } from "puppeteer";
 
-import { ICWVResults } from "./index.js";
+import { ICWVResults } from "../main.js";
 import { getPortOfBrowser, getUrlOfPage } from "./browserSessionManager.js";
 
 /**
