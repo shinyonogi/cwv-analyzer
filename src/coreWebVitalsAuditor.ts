@@ -1,17 +1,16 @@
 import { RunnerResult, Flags as LighthouseOptions, Result } from "lighthouse";
 import { Browser, Page } from "puppeteer";
 
-import { CWVResults } from "./index.js";
+import { ICWVResults } from "./index.js";
 import { getPortOfBrowser, getUrlOfPage } from "./browserSessionManager.js";
 
 
-export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Promise<CWVResults> {
+export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Promise<ICWVResults> {
     const url: string = getUrlOfPage(page);
     const port: number = getPortOfBrowser(browser);
 
     const lighthouseResults: Result | undefined = await runLighthouse(url, configureLighthouseOptions(port));
-
-    const measuredCWVResults : CWVResults = {
+    const measuredCWVResults : ICWVResults = {
         lcp: getLCP(lighthouseResults),
         fid: getFID(lighthouseResults),
         cls: getCLS(lighthouseResults)

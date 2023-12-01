@@ -1,9 +1,10 @@
 import fs from 'fs';
 import csv from 'csv-parser';
-import { ITrancoRanking } from './index.js';
+
+import { ITrancoRanking, ICWVResults } from './index.js';
 
 
-export const readTrancoRankingsCsv = (pathToCsvFile: string, fromRank: number, toRank: number) => {
+export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, toRank: number){
     return new Promise<ITrancoRanking[]>((resolve, reject) => {
         const trancoRankings: ITrancoRanking[] = [];
         fs.createReadStream(pathToCsvFile)
@@ -21,4 +22,19 @@ export const readTrancoRankingsCsv = (pathToCsvFile: string, fromRank: number, t
                 reject(error);
             })
     });
-};
+}
+
+
+export function initializeVitalsReportCsv(pathToCsvFile: string): void {
+    if (!fs.existsSync(pathToCsvFile)) {
+        const resultCsvHeader = 'Rank,Domain,LCP,FID,CLS\n';
+        fs.writeFileSync(pathToCsvFile, resultCsvHeader);
+    }
+}
+
+
+export function writeVitalsToCsv(pathToCsvFile: string, rank: number, domain: string, measuredCWV: ICWVResults): void {
+    const { lcp, fid, cls } = measuredCWV;
+    const vitalsDataRow = `${rank},${domain},${lcp},${fid},${cls}\n`
+    fs.appendFileSync(pathToCsvFile, vitalsDataRow);
+}
