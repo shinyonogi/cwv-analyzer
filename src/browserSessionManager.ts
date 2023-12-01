@@ -9,30 +9,29 @@ export async function initializeBrowser() {
     };
 
     const browser: Browser = await puppeteer.launch(PUPPETEER_OPTIONS);
-    if (browser) {
-        console.log('Succesfully launched a new browser with Puppeteer');
-    }
+    console.log('Browser initialized');
 
     return browser;
 };
 
 
 export async function closeBrowser(browser: Browser) {
-    try {
-        await browser.close();
-        console.log('Browser closed successfully');
-    } catch (error) {
-        console.error('Error closing browser:', error);
-    }
+    await browser.close();
+    console.log('Browser closed');
 };
 
 
-export async function openPageWithBrowser(browser: Browser, domain: string) {
+export async function openPageWithBrowser(browser: Browser, domain: string): Promise<Page> {
     const url: string = `https://www.${domain}`;
     const page: Page = await browser.newPage();
-    await page.goto(url);
-    if (page) {
-        console.log(`Successfully visited: ${url}`);
+    console.log('New Page initiated');
+    try {
+        await page.goto(url);
+        console.log(`Visited: ${url}`);
+    } catch(error) {
+        console.log(`Could not visit: ${url}`);
+        await closeCurrentPage(page);
+        throw new Error(String(error));
     }
 
     return page;
@@ -40,12 +39,8 @@ export async function openPageWithBrowser(browser: Browser, domain: string) {
 
 
 export async function closeCurrentPage(page: Page) {
-    try {
-        await page.close();
-        console.log('Successfully closed page');
-    } catch(error) {
-        console.log('Error closing page', error);
-    }
+    await page.close();
+    console.log(`Closed Page`);
 };
 
 

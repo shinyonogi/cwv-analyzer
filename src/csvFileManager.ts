@@ -29,6 +29,9 @@ export function initializeVitalsReportCsv(pathToCsvFile: string): void {
     if (!fs.existsSync(pathToCsvFile)) {
         const resultCsvHeader = 'Rank,Domain,LCP,FID,CLS\n';
         fs.writeFileSync(pathToCsvFile, resultCsvHeader);
+        console.log('Initialized CoreWebVitalsReport.csv');
+    }else {
+        console.log('Could not initialize CoreWebVitalsReport.csv, because file already exists.');
     }
 }
 
