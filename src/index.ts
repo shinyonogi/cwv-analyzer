@@ -30,21 +30,12 @@ export interface ICWVResults {
  * 4. For each domain, it opens the page, measures Core Web Vitals using Lighthouse, and records the results in the CSV file.
  * 5. If an error occurs while processing a domain, it records default ('undefined') metrics for that domain in the CSV file.
  * 6. Closes each page after processing and shuts down the browser after all domains are processed.
- *
- * Usage: Adjust the domain range in the call to readTrancoRankingsCsv for different sets of domains.
  */
 const main = async () => {
     const browser: Browser = await initializeBrowser();
 
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
 
-    /**
-     * readTrancoRankingCsv(pathToCsvFile, fromRank, toRank) - Reads domain rankings from the Tranco CSV file within a specified range.
-     * @param pathToCsvFile - Path to the Tranco CSV file.
-     * @param fromRank - Start rank (inclusive), 1 <= fromRank <= 1,000,000.
-     * @param toRank - End rank (inclusive), fromRank <= toRank <= 1,000,000.
-     * Example: readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10) for the top 10 domains.
-     */
     const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
 
     for (const rankedDomainEntry of trancoRankings) {
