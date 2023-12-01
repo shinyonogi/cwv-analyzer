@@ -57,7 +57,7 @@ export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Pro
  * - formFactor: The type of device to simulate (desktop/mobile).
  * - screenEmulation: Screen properties for emulation.
  */
-function configureLighthouseOptions(port: number) {
+function configureLighthouseOptions(port: number): LighthouseOptions {
     // Configuration options for Lighthouse
     const LIGHTHOUSE_OPTIONS: LighthouseOptions = {
         logLevel: 'info',

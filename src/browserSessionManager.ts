@@ -9,7 +9,7 @@ import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
  * - defaultViewport: Default viewport settings (null for no default).
  * - args: Additional arguments for launching the browser.
  */
-export async function initializeBrowser() {
+export async function initializeBrowser(): Promise<Browser> {
     const PUPPETEER_OPTIONS: PuppeteerLaunchOptions = {
         headless: "new",
         defaultViewport: null,
@@ -26,7 +26,7 @@ export async function initializeBrowser() {
  * Closes the given Puppeteer Browser instance.
  * @param browser The Browser instance to close.
  */
-export async function closeBrowser(browser: Browser) {
+export async function closeBrowser(browser: Browser): Promise<void> {
     await browser.close();
     console.log('Browser closed');
 };
@@ -61,7 +61,7 @@ export async function openPageWithBrowser(browser: Browser, domain: string): Pro
  * Closes the given Puppeteer Page instance.
  * @param page The Page instance to close.
  */
-export async function closeCurrentPage(page: Page) {
+export async function closeCurrentPage(page: Page): Promise<void> {
     await page.close();
     console.log(`Closed Page`);
 };

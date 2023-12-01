@@ -10,13 +10,13 @@ import { ITrancoRanking, ICWVResults } from './index.js';
  * @param toRank The ending rank up to which to read the domains.
  * @returns A promise that resolves to an array of ITrancoRanking objects.
  */
-export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, toRank: number){
+export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, toRank: number): Promise<ITrancoRanking[]> {
     return new Promise<ITrancoRanking[]>((resolve, reject) => {
         const trancoRankings: ITrancoRanking[] = [];
         fs.createReadStream(pathToCsvFile)
             .pipe(csv({headers: ['rank', 'domain']}))
             .on('data', (data: ITrancoRanking) => {
-                const isRankInRange: boolean = data.rank >= fromRank && data.rank <= toRank
+                const isRankInRange: boolean = data.rank >= fromRank && data.rank <= toRank;
                 if (isRankInRange) {
                     trancoRankings.push(data);
                 }

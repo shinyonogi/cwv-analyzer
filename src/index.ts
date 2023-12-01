@@ -58,7 +58,7 @@ const main = async () => {
         }catch (pageError) {
             console.error(`Error processing domain ${rankedDomainEntry.domain}:`, pageError);
 
-            // In case of an error, write default undefined values for CWV to the CSV file
+            // In case of an error, write default 'undefined' values for CWV to the CSV file
             const notMeasuredCWV: ICWVResults = {
                 lcp: undefined,
                 fid: undefined,
