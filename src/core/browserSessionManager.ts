@@ -18,7 +18,6 @@ export async function initializeBrowser(): Promise<Browser> {
 
     const browser: Browser = await puppeteer.launch(PUPPETEER_OPTIONS);
     console.log('Browser initialized');
-
     return browser;
 };
 
