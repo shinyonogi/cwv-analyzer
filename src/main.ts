@@ -1,6 +1,6 @@
 import { Browser, Page } from "puppeteer";
 
-import { readTrancoRankingsCsv, initializeVitalsReportCsv, writeVitalsToCsv } from "./core/csvFileManager.js";
+import { initializeVitalsReportCsv, readTrancoRankingsCsv, writeVitalsToCsv } from "./core/csvFileManager.js";
 import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./core/browserSessionManager.js";
 import { measureCWVOnBrowserPage } from "./core/coreWebVitalsAuditor.js";
 
