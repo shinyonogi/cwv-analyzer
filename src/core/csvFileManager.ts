@@ -9,8 +9,8 @@ import { ITrancoRanking, ICWVResults } from '../main.js';
  */
 export function initializeVitalsReportCsv(pathToCsvFile: string): void {
     if (!fs.existsSync(pathToCsvFile)) {
-        const resultCsvHeader = 'Rank,Domain,LCP,FID,CLS\n';
-        fs.writeFileSync(pathToCsvFile, resultCsvHeader);
+        const vitalsReportHeader = 'Rank,Domain,LCP,FID,CLS\n';
+        fs.writeFileSync(pathToCsvFile, vitalsReportHeader);
         console.log('Initialized CoreWebVitalsReport.csv');
     }else {
         console.log('CoreWebVitalsReport.csv already exists and will not be overwritten.');

@@ -62,7 +62,7 @@ export async function openPageWithBrowser(browser: Browser, domain: string): Pro
  */
 export async function closeCurrentPage(page: Page): Promise<void> {
     await page.close();
-    console.log(`Closed Page`);
+    console.log(`Page Closed`);
 };
 
 /**

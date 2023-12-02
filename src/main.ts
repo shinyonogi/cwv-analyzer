@@ -22,23 +22,23 @@ export interface ICWVResults {
  * Main function to measure and record Core Web Vitals for specified domains from the Tranco list.
  *
  * Steps:
- * 1. Initializes a Puppeteer browser instance for web page interactions.
- * 2. Prepares a CSV file for recording Core Web Vitals metrics.
+ * 1. Prepares a CSV file for recording Core Web Vitals metrics.
+ * 2. Initializes a Puppeteer browser instance for web page interactions.
  * 3. Reads a specified range of domain rankings from the Tranco CSV file.
  * 4. For each domain, it opens the page, measures Core Web Vitals using Lighthouse, and records the results in the CSV file.
  * 5. If an error occurs while processing a domain, it records default ('undefined') metrics for that domain in the CSV file.
  * 6. Closes each page after processing and shuts down the browser after all domains are processed.
  */
 const main = async () => {
-    initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
     const browser: Browser = await initializeBrowser();
+    initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
 
-    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
+    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10000);
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
         let page: Page | null = null;
-        let csvResults: ICWVResults = { lcp: undefined, fid: undefined,cls: undefined }
+        let csvResults: ICWVResults = { lcp: undefined, fid: undefined, cls: undefined }
 
         try {
             page = await openPageWithBrowser(browser, domain);
