@@ -31,9 +31,9 @@ export interface ICWVResults {
  */
 const main = async () => {
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
-    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
     const browser: Browser = await initializeBrowser();
 
+    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
