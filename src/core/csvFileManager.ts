@@ -4,6 +4,20 @@ import csv from 'csv-parser';
 import { ITrancoRanking, ICWVResults } from '../main.js';
 
 /**
+ * Initializes a CSV file for storing Core Web Vitals results. If the file already exists, it is not overwritten.
+ * @param pathToCsvFile Path to the CSV file to initialize.
+ */
+export function initializeVitalsReportCsv(pathToCsvFile: string): void {
+    if (!fs.existsSync(pathToCsvFile)) {
+        const resultCsvHeader = 'Rank,Domain,LCP,FID,CLS\n';
+        fs.writeFileSync(pathToCsvFile, resultCsvHeader);
+        console.log('Initialized CoreWebVitalsReport.csv');
+    }else {
+        console.log('CoreWebVitalsReport.csv already exists and will not be overwritten.');
+    }
+}
+
+/**
  * Reads Tranco rankings from a CSV file and returns a list of rankings within the specified range.
  * @param pathToCsvFile Path to the CSV file containing the Tranco rankings.
  * @param fromRank The starting rank from which to read the domains.
@@ -30,20 +44,6 @@ export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, t
                 reject(readError);
             })
     });
-}
-
-/**
- * Initializes a CSV file for storing Core Web Vitals results. If the file already exists, it is not overwritten.
- * @param pathToCsvFile Path to the CSV file to initialize.
- */
-export function initializeVitalsReportCsv(pathToCsvFile: string): void {
-    if (!fs.existsSync(pathToCsvFile)) {
-        const resultCsvHeader = 'Rank,Domain,LCP,FID,CLS\n';
-        fs.writeFileSync(pathToCsvFile, resultCsvHeader);
-        console.log('Initialized CoreWebVitalsReport.csv');
-    }else {
-        console.log('CoreWebVitalsReport.csv already exists and will not be overwritten.');
-    }
 }
 
 /**
