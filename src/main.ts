@@ -29,7 +29,7 @@ export interface ICWVResults {
  * 5. If an error occurs while processing a domain, it records default ('undefined') metrics for that domain in the CSV file.
  * 6. Closes each page after processing and shuts down the browser after all domains are processed.
  */
-const main = async () => {
+async function main() {
     const browser: Browser = await initializeBrowser();
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
 
@@ -55,7 +55,7 @@ const main = async () => {
     }
 
     await closeBrowser(browser);
-};
+}
 
 // Entry Point
 main();

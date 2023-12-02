@@ -19,7 +19,7 @@ export async function initializeBrowser(): Promise<Browser> {
     const browser: Browser = await puppeteer.launch(PUPPETEER_OPTIONS);
     console.log('Browser initialized');
     return browser;
-};
+}
 
 /**
  * Closes the given Puppeteer Browser instance.
@@ -28,7 +28,7 @@ export async function initializeBrowser(): Promise<Browser> {
 export async function closeBrowser(browser: Browser): Promise<void> {
     await browser.close();
     console.log('Browser closed');
-};
+}
 
 /**
  * Opens a new page in the given browser and navigates to the specified domain.
@@ -63,7 +63,7 @@ export async function openPageWithBrowser(browser: Browser, domain: string): Pro
 export async function closeCurrentPage(page: Page): Promise<void> {
     await page.close();
     console.log(`Page Closed`);
-};
+}
 
 /**
  * Retrieves the port number of the WebSocket endpoint for the given Browser instance.
