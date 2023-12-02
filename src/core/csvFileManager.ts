@@ -30,8 +30,8 @@ export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, t
         fs.createReadStream(pathToCsvFile)
             .pipe(csv({headers: ['rank', 'domain']}))
             .on('data', (data: ITrancoRanking) => {
-                const isRankInRange: boolean = data.rank >= fromRank && data.rank <= toRank;
-                if (isRankInRange) {
+                const isDataRankInRange: boolean = data.rank >= fromRank && data.rank <= toRank;
+                if (isDataRankInRange) {
                     trancoRankings.push(data);
                 }
             })
