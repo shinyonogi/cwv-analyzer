@@ -30,9 +30,9 @@ export interface ICWVResults {
  * 6. Closes each page after processing and shuts down the browser after all domains are processed.
  */
 const main = async () => {
-    const browser: Browser = await initializeBrowser();
-
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
+
+    const browser: Browser = await initializeBrowser();
 
     const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10);
 
