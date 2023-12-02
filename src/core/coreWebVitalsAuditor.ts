@@ -16,14 +16,12 @@ export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Pro
 
     // Promise for Lighthouse to run and gather results
     const lighthousePromise: Result | undefined = await runLighthouse(url, configureLighthouseOptions(port));
-
     // Promise that resolves to undefined after a timeout (30 seconds)
     const timeoutPromise = new Promise<undefined>((resolve) => {
         setTimeout(() => {
             resolve(undefined);
         }, 30000);
     });
-
     // Race the promises to either get results from Lighthouse or hit the timeout
     const lighthouseResults: Result | undefined = await Promise.race([lighthousePromise, timeoutPromise]);
 
