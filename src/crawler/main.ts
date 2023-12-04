@@ -4,8 +4,8 @@ import { initializeVitalsReportCsv, readTrancoRankingsCsv, writeVitalsToCsv } fr
 import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./core/browserSessionManager.js";
 import { measureCWVOnBrowserPage } from "./core/coreWebVitalsAuditor.js";
 
-const TRANCO_CSV_FILE_PATH: string = './csvData/top-1m.csv';
-const VITALS_REPORT_CSV_FILE_PATH: string = './csvData/CoreWebVitalsReport.csv';
+const TRANCO_CSV_FILE_PATH: string = './data/top-1m.csv';
+const VITALS_REPORT_CSV_FILE_PATH: string = './data/CoreWebVitalsReport.csv';
 
 export interface ITrancoRanking {
     rank: number;
@@ -33,7 +33,7 @@ async function main() {
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
     const browser: Browser = await initializeBrowser();
 
-    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 7945, 10000);
+    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 8009, 10000);
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
