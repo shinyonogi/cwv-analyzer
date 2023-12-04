@@ -4,5 +4,8 @@ node_modules/
 # Ignore dist directory
 dist/
 
+# Ignore pycache directory
+__pycache__/
+
 # Other Local Files
 .DS_Store

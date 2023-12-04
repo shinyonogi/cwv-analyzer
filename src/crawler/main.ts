@@ -33,7 +33,7 @@ async function main() {
     initializeVitalsReportCsv(VITALS_REPORT_CSV_FILE_PATH);
     const browser: Browser = await initializeBrowser();
 
-    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 8009, 10000);
+    const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 8012, 10000);
     for (const rankedDomainEntry of trancoRankings) {
         const { rank, domain } : ITrancoRanking = rankedDomainEntry;
 
