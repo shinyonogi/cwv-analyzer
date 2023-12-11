@@ -41,17 +41,13 @@ export async function closeBrowser(browser: Browser): Promise<void> {
  */
 export async function openPageWithBrowser(browser: Browser, domain: string): Promise<Page> {
     const url: string = `https://www.${domain}`;
+
     const page: Page = await browser.newPage();
     console.log('New Page initiated');
-    try {
-        console.log(`Attempting to visit: ${url}`)
-        await page.goto(url);
-        console.log(`Successfully visited: ${url}`);
-    } catch(domainError) {
-        console.log(`Could not visit: ${url}`);
-        await closeCurrentPage(page);
-        throw new Error(String(domainError));
-    }
+
+    console.log(`Attempting to visit: ${url}`)
+    await page.goto(url);
+    console.log(`Successfully visited: ${url}`);
 
     return page;
 }

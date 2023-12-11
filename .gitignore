@@ -9,3 +9,4 @@ __pycache__/
 
 # Other Local Files
 .DS_Store
+.env

@@ -2,7 +2,24 @@ import { RunnerResult, Flags as LighthouseOptions, Result } from "lighthouse";
 import { Browser, Page } from "puppeteer";
 
 import { ICWVResults } from "../main.js";
-import { getPortOfBrowser, getUrlOfPage } from "./browserSessionManager.js";
+import { getPortOfBrowser, getUrlOfPage, openPageWithBrowser, closeCurrentPage } from "./browserSessionManager.js";
+
+export async function measureCWVWithPuppeteerAndLighthouse(browser: Browser, domain: string): Promise<ICWVResults> {
+    let page: Page | null = null;
+    let csvResults: ICWVResults = { lcp: undefined, fid: undefined, cls: undefined }
+
+    try {
+        page = await openPageWithBrowser(browser, domain);
+        csvResults = await measureCWVOnBrowserPage(browser, page);
+    }catch (pageError) {
+        console.error(`Error processing domain ${domain}:`, pageError);
+    }finally {
+        if(page) {
+            await closeCurrentPage(page);
+        }
+        return csvResults;
+    }
+}
 
 /**
  * Measures the Core Web Vitals for a given page in a browser.
@@ -10,7 +27,7 @@ import { getPortOfBrowser, getUrlOfPage } from "./browserSessionManager.js";
  * @param page The Puppeteer Page instance to measure Core Web Vitals on.
  * @returns A promise that resolves to the measured Core Web Vitals results.
  */
-export async function measureCWVOnBrowserPage(browser: Browser, page: Page): Promise<ICWVResults> {
+async function measureCWVOnBrowserPage(browser: Browser, page: Page): Promise<ICWVResults> {
     const url: string = getUrlOfPage(page);
     const port: number = getPortOfBrowser(browser);
 

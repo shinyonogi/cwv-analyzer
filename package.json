@@ -14,11 +14,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.10.1",
+    "@types/node": "^20.10.4",
     "typescript": "^5.3.2"
   },
   "dependencies": {
+    "@googleapis/pagespeedonline": "^1.1.5",
     "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.1",
+    "googleapis": "^129.0.0",
     "lighthouse": "^11.3.0",
     "puppeteer": "^21.5.2"
   }
