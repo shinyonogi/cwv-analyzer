@@ -13,7 +13,7 @@ const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
  * @returns A promise resolving to the Core Web Vitals results.
  */
 export async function fetchCoreWebVitalsFromCrUX(domain: string): Promise<ICWVResults> {
-    const origin: string = 'https://www.' + domain;
+    const origin: string = `https://www.${domain}`;
     let crUXCWVResults: ICWVResults = { lcp: undefined, fid: undefined, cls: undefined }
 
     try {
