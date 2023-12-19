@@ -9,7 +9,7 @@ import puppeteer, { Browser, Page, PuppeteerLaunchOptions } from "puppeteer";
  * - defaultViewport: Default viewport settings (null for no default).
  * - args: Additional arguments for launching the browser.
  */
-export async function initializeBrowser(): Promise<Browser> {
+async function initializeBrowser(): Promise<Browser> {
     const PUPPETEER_OPTIONS: PuppeteerLaunchOptions = {
         headless: "new",
         defaultViewport: null,
@@ -25,7 +25,7 @@ export async function initializeBrowser(): Promise<Browser> {
  * Closes the given Puppeteer Browser instance.
  * @param browser The Browser instance to close.
  */
-export async function closeBrowser(browser: Browser): Promise<void> {
+async function closeBrowser(browser: Browser): Promise<void> {
     await browser.close();
     console.log('Browser closed');
 }
@@ -39,7 +39,7 @@ export async function closeBrowser(browser: Browser): Promise<void> {
  * Logs the process of opening and navigating to the page. In case of a navigation error,
  * the opened page is closed and the error is rethrown.
  */
-export async function openPageWithBrowser(browser: Browser, domain: string): Promise<Page> {
+async function openPageWithBrowser(browser: Browser, domain: string): Promise<Page> {
     const url: string = `https://www.${domain}`;
 
     const page: Page = await browser.newPage();
@@ -56,7 +56,7 @@ export async function openPageWithBrowser(browser: Browser, domain: string): Pro
  * Closes the given Puppeteer Page instance.
  * @param page The Page instance to close.
  */
-export async function closeCurrentPage(page: Page): Promise<void> {
+async function closeCurrentPage(page: Page): Promise<void> {
     await page.close();
     console.log(`Page Closed`);
 }
@@ -66,7 +66,7 @@ export async function closeCurrentPage(page: Page): Promise<void> {
  * @param browser The Browser instance.
  * @returns The port number.
  */
-export function getPortOfBrowser(browser: Browser): number {
+function getPortOfBrowser(browser: Browser): number {
     return parseInt((new URL(browser.wsEndpoint())).port);
 }
 
@@ -75,6 +75,15 @@ export function getPortOfBrowser(browser: Browser): number {
  * @param page The Page instance.
  * @returns The current URL of the page.
  */
-export function getUrlOfPage(page: Page): string {
+function getUrlOfPage(page: Page): string {
     return String(new URL(page.url()));
 }
+
+export {
+    initializeBrowser,
+    closeBrowser,
+    openPageWithBrowser,
+    closeCurrentPage,
+    getPortOfBrowser,
+    getUrlOfPage
+};

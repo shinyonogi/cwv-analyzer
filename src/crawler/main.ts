@@ -5,9 +5,9 @@ import { Browser } from "puppeteer";
 
 import { initializeVitalsReportCsv, readTrancoRankingsCsv, writeVitalsToCsv } from "./core/csvFileManager.js";
 import { initializeBrowser, closeBrowser } from "./core/browserSessionManager.js";
-import { measureCWVWithPuppeteerAndLighthouse } from "./core/lighthouseVitalsAuditor.js";
-import { fetchCWVFromCrUX } from "./core/cruxVitalsReporter.js";
-import { fetchPageSpeedInsightsCWV } from "./core/psiVitalsReporter.js";
+import measureCWVWithPuppeteerAndLighthouse from "./core/lighthouseVitalsAuditor.js";
+import fetchCWVFromCrUX from "./core/cruxVitalsReporter.js";
+import fetchPageSpeedInsightsCWV from "./core/psiVitalsReporter.js";
 
 const TRANCO_CSV_FILE_PATH: string = './data/top-1m.csv';
 

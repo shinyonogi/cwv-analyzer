@@ -6,7 +6,7 @@ interface IUrl {
     checkUrl(): Promise<void>;
 }
 
-export function urlFactory(domain: string): string {
+export default function urlFactory(domain: string): string {
     const url: IUrl = {
         _url: domain,
         get url() { return this._url; },

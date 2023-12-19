@@ -5,7 +5,7 @@ import { chromeuxreport_v1, google } from 'googleapis';
 import { GaxiosError } from 'gaxios';
 
 import { ICWVResults } from "../main.js";
-import { urlFactory } from '../util/redirectUrlTracker.js';
+import urlFactory from '../util/redirectUrlTracker.js';
 
 const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
@@ -14,7 +14,7 @@ const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
  * @param domain The domain to fetch the Core Web Vitals for.
  * @returns A promise resolving to the Core Web Vitals results.
  */
-export async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
+export default async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
     const url: string = urlFactory(domain);
 
     try {

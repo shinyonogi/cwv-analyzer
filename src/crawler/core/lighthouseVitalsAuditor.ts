@@ -4,7 +4,7 @@ import { Browser, Page } from "puppeteer";
 import { ICWVResults } from "../main.js";
 import { getPortOfBrowser, getUrlOfPage, openPageWithBrowser, closeCurrentPage } from "./browserSessionManager.js";
 
-export async function measureCWVWithPuppeteerAndLighthouse(browser: Browser, domain: string): Promise<ICWVResults> {
+export default async function measureCWVWithPuppeteerAndLighthouse(browser: Browser, domain: string): Promise<ICWVResults> {
     let page: Page | null = null;
     let csvResults: ICWVResults = { lcp: null, fid: null, cls: null }
 

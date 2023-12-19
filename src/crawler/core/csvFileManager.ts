@@ -7,7 +7,7 @@ import { ITrancoRanking, ICWVResults } from '../main.js';
  * Initializes a CSV file for storing Core Web Vitals results. If the file already exists, it is not overwritten.
  * @param pathToCsvFile Path to the CSV file to initialize.
  */
-export function initializeVitalsReportCsv(pathToCsvFile: string): void {
+function initializeVitalsReportCsv(pathToCsvFile: string): void {
     const fileExists = fs.existsSync(pathToCsvFile);
     if (!fileExists) {
         const vitalsReportHeader = 'Rank,Domain,LCP,FID,CLS\n';
@@ -25,7 +25,7 @@ export function initializeVitalsReportCsv(pathToCsvFile: string): void {
  * @param toRank The ending rank up to which to read the domains.
  * @returns A promise that resolves to an array of ITrancoRanking objects.
  */
-export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, toRank: number): Promise<ITrancoRanking[]> {
+function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, toRank: number): Promise<ITrancoRanking[]> {
     return new Promise<ITrancoRanking[]>((resolve, reject) => {
         const trancoRankings: ITrancoRanking[] = [];
         fs.createReadStream(pathToCsvFile)
@@ -54,9 +54,15 @@ export function readTrancoRankingsCsv(pathToCsvFile: string, fromRank: number, t
  * @param domain Domain name.
  * @param measuredCWV Core Web Vitals results to write to the CSV file.
  */
-export function writeVitalsToCsv(pathToCsvFile: string, rank: number, domain: string, measuredCWV: ICWVResults): void {
+function writeVitalsToCsv(pathToCsvFile: string, rank: number, domain: string, measuredCWV: ICWVResults): void {
     const { lcp, fid, cls } = measuredCWV;
     const vitalsDataRow = `${rank},${domain},${lcp},${fid},${cls}\n`
     fs.appendFileSync(pathToCsvFile, vitalsDataRow);
     console.log(`Appended Core Web Vitals data for ${domain} to CSV.`);
 }
+
+export {
+    writeVitalsToCsv,
+    initializeVitalsReportCsv,
+    readTrancoRankingsCsv
+};
