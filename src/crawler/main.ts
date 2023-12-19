@@ -4,7 +4,7 @@ dotenv.config();
 import { Browser } from "puppeteer";
 
 import { initializeVitalsReportCsv, readTrancoRankingsCsv, writeVitalsToCsv } from "./core/csvFileManager.js";
-import { initializeBrowser, closeBrowser, openPageWithBrowser, closeCurrentPage } from "./core/browserSessionManager.js";
+import { initializeBrowser, closeBrowser } from "./core/browserSessionManager.js";
 import { measureCWVWithPuppeteerAndLighthouse } from "./core/lighthouseVitalsAuditor.js";
 import { fetchCWVFromCrUX } from "./core/cruxVitalsReporter.js";
 import { fetchPageSpeedInsightsCWV } from "./core/psiVitalsReporter.js";

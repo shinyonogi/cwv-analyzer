@@ -1,12 +1,22 @@
 import axios, { AxiosError } from 'axios';
 
-export interface IUrl {
+interface IUrl {
     _url: string;
     get url(): string;
     checkUrl(): Promise<void>;
 }
 
-export async function checkUrl(this: IUrl): Promise<void> {
+export function urlFactory(domain: string): string {
+    const url: IUrl = {
+        _url: domain,
+        get url() { return this._url; },
+        checkUrl: checkUrl
+    }
+    url.checkUrl();
+    return url.url;
+}
+
+async function checkUrl(this: IUrl): Promise<void> {
     const prefixes = ['https://www.', 'https://', 'http://www.', 'http://'];
     for (const prefix of prefixes) {
       try {
@@ -29,12 +39,3 @@ export async function checkUrl(this: IUrl): Promise<void> {
     this._url = `https://${this._url}`;
 }
 
-export function urlFactory(domain: string): string {
-    const url: IUrl = {
-        _url: domain,
-        get url() { return this._url; },
-        checkUrl: checkUrl
-    }
-    url.checkUrl();
-    return url.url;
-}
