@@ -3,22 +3,17 @@ dotenv.config();
 
 import { google } from 'googleapis';
 
-import { IUrl, checkUrl } from '../util/redirectUrlTracker.js';
+import { urlFactory } from '../util/redirectUrlTracker.js';
 import { ICWVResults } from '../main.js';
 
 const PAGE_SPEED_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
 export async function fetchPageSpeedInsightsCWV(domain: string): Promise<ICWVResults> {
-    const siteUrl: IUrl = {
-        _url: domain,
-        get url() { return this._url; },
-        checkUrl: checkUrl
-    }
-    await siteUrl.checkUrl();
+    const url: string = urlFactory(domain);
 
     try {
-        console.log(`Fetching CWV Metrics from PageSpeed Insights for ${siteUrl.url}`);
-        const psiAPIResponse = await getPSIForUrl(siteUrl.url);
+        console.log(`Fetching CWV Metrics from PageSpeed Insights for ${url}`);
+        const psiAPIResponse = await getPSIForUrl(url);
         const psiMetrics = psiAPIResponse.data.lighthouseResult;
         const psiCWVResults: ICWVResults = {
             lcp: getLCP(psiMetrics),

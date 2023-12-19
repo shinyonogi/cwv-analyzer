@@ -28,3 +28,13 @@ export async function checkUrl(this: IUrl): Promise<void> {
     console.log(`Url ${this._url} seems not working. It will still try to access with the given url.`);
     this._url = `https://${this._url}`;
 }
+
+export function urlFactory(domain: string): string {
+    const url: IUrl = {
+        _url: domain,
+        get url() { return this._url; },
+        checkUrl: checkUrl
+    }
+    url.checkUrl();
+    return url.url;
+}

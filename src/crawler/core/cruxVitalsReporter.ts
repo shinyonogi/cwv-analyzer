@@ -5,7 +5,7 @@ import { chromeuxreport_v1, google } from 'googleapis';
 import { GaxiosError } from 'gaxios';
 
 import { ICWVResults } from "../main.js";
-import { IUrl, checkUrl } from '../util/redirectUrlTracker.js';
+import { urlFactory } from '../util/redirectUrlTracker.js';
 
 const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
@@ -15,15 +15,11 @@ const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
  * @returns A promise resolving to the Core Web Vitals results.
  */
 export async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
-    const siteOrigin: IUrl = {
-        _url: domain,
-        get url() { return this._url; },
-        checkUrl: checkUrl
-    }
-    await siteOrigin.checkUrl();
+    const url: string = urlFactory(domain);
 
     try {
-        const crUXAPIResponse = await getChromeUXReportForUrl(siteOrigin._url);
+        console.log(`Fetching CWV Metrics from CrUX for ${url}`);
+        const crUXAPIResponse = await getChromeUXReportForUrl(url);
         const crUXMetrics = crUXAPIResponse.data.record?.metrics;
         const crUXCWVResults: ICWVResults = {
             lcp: getLCP(crUXMetrics),
