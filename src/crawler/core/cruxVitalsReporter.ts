@@ -2,8 +2,10 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { chromeuxreport_v1, google } from 'googleapis';
+import { GaxiosError } from 'gaxios';
 
 import { ICWVResults } from "../main.js";
+import { IUrl, checkUrl } from '../util/redirectUrlTracker.js';
 
 const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
@@ -12,22 +14,29 @@ const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
  * @param domain The domain to fetch the Core Web Vitals for.
  * @returns A promise resolving to the Core Web Vitals results.
  */
-export async function fetchCoreWebVitalsFromCrUX(domain: string): Promise<ICWVResults> {
-    const origin: string = `https://www.${domain}`;
-    let crUXCWVResults: ICWVResults = { lcp: undefined, fid: undefined, cls: undefined }
+export async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
+    const siteOrigin: IUrl = {
+        _url: domain,
+        get url() { return this._url; },
+        checkUrl: checkUrl
+    }
+    await siteOrigin.checkUrl();
 
     try {
-        const crUXAPIResponse = await getChromeUXReportForUrl(origin);
+        const crUXAPIResponse = await getChromeUXReportForUrl(siteOrigin._url);
         const crUXMetrics = crUXAPIResponse.data.record?.metrics;
-        crUXCWVResults = {
+        const crUXCWVResults: ICWVResults = {
             lcp: getLCP(crUXMetrics),
             fid: getFID(crUXMetrics),
             cls: getCLS(crUXMetrics)
         }
-    }catch (apiError) {
-        console.error('Error Fetching CWV Metrics from CrUX', apiError);
-    }finally {
         return crUXCWVResults;
+    }catch (apiError) {
+        if (apiError instanceof GaxiosError)
+            console.error('Error Fetching CWV Metrics from CrUX', apiError.status);
+        else
+            console.error('Error Fetching CWV Metrics from CrUX', apiError);
+        return { lcp: null, fid: null, cls: null };
     }
 }
 
@@ -49,29 +58,29 @@ async function getChromeUXReportForUrl(url: string) {
     return response;
 }
 
-function getLCP(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | undefined {
+function getLCP(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | null {
     const lcpMetrics = metrics?.largest_contentful_paint;
     if (lcpMetrics && lcpMetrics.percentiles) {
         return lcpMetrics.percentiles.p75;
     }
 
-    return undefined;
+    return null;
 }
 
-function getFID(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | undefined {
+function getFID(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | null {
     const fidMetrics = metrics?.first_input_delay;
     if (fidMetrics && fidMetrics.percentiles) {
         return fidMetrics.percentiles.p75;
     }
 
-    return undefined;
+    return null;
 }
 
-function getCLS(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | undefined {
+function getCLS(metrics: { [key: string]: chromeuxreport_v1.Schema$Metric; } | null | undefined): number | null {
     const clsMetrics = metrics?.cumulative_layout_shift;
     if (clsMetrics && clsMetrics.percentiles) {
         return clsMetrics.percentiles.p75;
     }
 
-    return undefined;
+    return null;
 }

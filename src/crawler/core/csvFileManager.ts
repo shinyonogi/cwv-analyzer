@@ -12,9 +12,9 @@ export function initializeVitalsReportCsv(pathToCsvFile: string): void {
     if (!fileExists) {
         const vitalsReportHeader = 'Rank,Domain,LCP,FID,CLS\n';
         fs.writeFileSync(pathToCsvFile, vitalsReportHeader);
-        console.log('Initialized CoreWebVitalsReport.csv');
+        console.log(`Initialized ${pathToCsvFile} for storing Core Web Vitals results.`);
     }else {
-        console.log('CoreWebVitalsReport.csv already exists and will not be overwritten.');
+        console.log(`${pathToCsvFile} already exists and will not be overwritten.`);
     }
 }
 

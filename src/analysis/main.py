@@ -2,7 +2,7 @@ import data_processing as dp
 import data_analysis as da
 import data_visualization as vis
 
-VITALS_REPORT_CSV_FILE_PATH = './data/CoreWebVitalsReport.csv';
+VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReport.csv';
 
 def main() -> None:
     df = dp.load_data(VITALS_REPORT_CSV_FILE_PATH)

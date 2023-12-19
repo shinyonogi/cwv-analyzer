@@ -6,7 +6,7 @@ import { getPortOfBrowser, getUrlOfPage, openPageWithBrowser, closeCurrentPage }
 
 export async function measureCWVWithPuppeteerAndLighthouse(browser: Browser, domain: string): Promise<ICWVResults> {
     let page: Page | null = null;
-    let csvResults: ICWVResults = { lcp: undefined, fid: undefined, cls: undefined }
+    let csvResults: ICWVResults = { lcp: null, fid: null, cls: null }
 
     try {
         page = await openPageWithBrowser(browser, domain);
@@ -124,8 +124,11 @@ async function runLighthouse(url: string, lighthouseOptions: LighthouseOptions):
  * @param lhr Lighthouse Result object.
  * @returns The LCP value in milliseconds, or undefined if not available.
  */
-function getLCP(lhr: Result | undefined): number | undefined {
-    return lhr?.audits['largest-contentful-paint'].numericValue;
+function getLCP(lhr: Result | undefined): number | null {
+    const lcp: number | undefined = lhr?.audits['largest-contentful-paint'].numericValue;
+
+    if (lcp) return lcp;
+    else return null;
 }
 
 /**
@@ -133,8 +136,11 @@ function getLCP(lhr: Result | undefined): number | undefined {
  * @param lhr Lighthouse Result object.
  * @returns The FID value in milliseconds, or undefined if not available.
  */
-function getFID(lhr: Result | undefined): number | undefined {
-    return lhr?.audits['max-potential-fid'].numericValue;
+function getFID(lhr: Result | undefined): number | null {
+    const fid: number | undefined = lhr?.audits['max-potential-fid'].numericValue;
+
+    if (fid) return fid;
+    else return null;
 }
 
 /**
@@ -142,6 +148,9 @@ function getFID(lhr: Result | undefined): number | undefined {
  * @param lhr Lighthouse Result object.
  * @returns The CLS value, or undefined if not available.
  */
-function getCLS(lhr: Result | undefined): number | undefined {
-    return lhr?.audits['cumulative-layout-shift'].numericValue;
+function getCLS(lhr: Result | undefined): number | null {
+    const cls: number | undefined = lhr?.audits['cumulative-layout-shift'].numericValue;
+
+    if (cls) return cls;
+    else return null;
 }
