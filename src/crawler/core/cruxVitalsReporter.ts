@@ -15,7 +15,7 @@ const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
  * @returns A promise resolving to the Core Web Vitals results.
  */
 export default async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
-    const url: string = urlFactory(domain);
+    const url: string = await urlFactory(domain);
 
     try {
         console.log(`Fetching CWV Metrics from CrUX for ${url}`);
@@ -28,8 +28,10 @@ export default async function fetchCWVFromCrUX(domain: string): Promise<ICWVResu
         }
         return crUXCWVResults;
     }catch (apiError) {
-        if (apiError instanceof GaxiosError)
+        if (apiError instanceof GaxiosError) {
+            //console.error('Error Fetching CWV Metrics from CrUX', apiError);
             console.error('Error Fetching CWV Metrics from CrUX', apiError.status);
+        }
         else
             console.error('Error Fetching CWV Metrics from CrUX', apiError);
         return { lcp: null, fid: null, cls: null };

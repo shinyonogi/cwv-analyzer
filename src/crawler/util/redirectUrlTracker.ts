@@ -6,13 +6,13 @@ interface IUrl {
     checkUrl(): Promise<void>;
 }
 
-export default function urlFactory(domain: string): string {
+export default async function urlFactory(domain: string): Promise<string> {
     const url: IUrl = {
         _url: domain,
         get url() { return this._url; },
         checkUrl: checkUrl
     }
-    url.checkUrl();
+    await url.checkUrl();
     return url.url;
 }
 

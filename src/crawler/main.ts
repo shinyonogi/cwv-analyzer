@@ -12,7 +12,7 @@ import fetchPageSpeedInsightsCWV from "./core/psiVitalsReporter.js";
 const TRANCO_CSV_FILE_PATH: string = './data/top-1m.csv';
 
 const LIGHTHOUSE_VITALS_REPORT_CSV_FILE_PATH: string = './data/CoreWebVitalsReportTest.csv';
-const CRUX_VITALS_REPORT_CSV_FILE_PATH: string = './data/CoreWebVitalsReportTestCrUX.csv';
+const CRUX_VITALS_REPORT_CSV_FILE_PATH: string = './data/CoreWebVitalsReportCrUX.csv';
 const PSI_VITALS_REPORT_CSV_FILE_PATH: string = './data/CoreWebVitalsReportTestPSI.csv';
 
 export interface ITrancoRanking {
@@ -44,7 +44,7 @@ async function crawlAndMeasureCWVWithPuppeeteerAndLighthouse(): Promise<void> {
 async function measureCWVWithCrUX(): Promise<void> {
   console.log("Start measuring with CrUX!");
 
-  const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 10000);
+  const trancoRankings: ITrancoRanking[] = await readTrancoRankingsCsv(TRANCO_CSV_FILE_PATH, 1, 100000);
   initializeVitalsReportCsv(CRUX_VITALS_REPORT_CSV_FILE_PATH);
 
   for (const rankedDomainEntry of trancoRankings) {

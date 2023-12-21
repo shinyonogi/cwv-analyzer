@@ -9,7 +9,7 @@ import { ICWVResults } from '../main.js';
 const PAGE_SPEED_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
 export default async function fetchPageSpeedInsightsCWV(domain: string): Promise<ICWVResults> {
-    const url: string = urlFactory(domain);
+    const url: string = await urlFactory(domain);
 
     try {
         console.log(`Fetching CWV Metrics from PageSpeed Insights for ${url}`);
