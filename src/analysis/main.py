@@ -1,8 +1,8 @@
 import pandas as pd
 
-import data_preprocessing as dp
-import data_analysis as da
-import data_visualization as vis
+import analysis.core.data_preprocessing as dp
+import analysis.core.data_analysis as da
+import analysis.core.data_visualization as vis
 
 CRUX_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportCrUX.csv'
 CRAWLER_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportLighthouse.csv'
@@ -12,13 +12,13 @@ def analyze_data(data_csv_file_path: str) -> None:
     df = pd.read_csv(data_csv_file_path, on_bad_lines='error')
 
     # Explanatory Data Analysis (EDA)
-    #dp.eda(df_for_crux)
+    #da.eda(df)
 
     # Data Preprocessing
     df = dp.preprocess_data(df)
     df_outliers_removed = dp.remove_outliers(df.copy())
 
-    #dp.eda(df_for_crux_without_outliers)
+    #da.eda(df_outliers_removed)
 
     # Descriptive Statistics
     da.perform_descriptive_analysis(df)

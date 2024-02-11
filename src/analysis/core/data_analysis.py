@@ -4,6 +4,31 @@ import statsmodels.api as sm
 import util as util
 import data_visualization as vis
 
+def eda(df: pd.DataFrame) -> None:
+    expected_ranks = range(1, 100000)
+    missing_ranks = set(expected_ranks) - set(df['Rank'])
+    if missing_ranks:
+        print("Missing row ranks:", missing_ranks)
+    else:
+        print("No missing rows found.")
+
+    print(df.head())
+    print(df.shape)
+    df.info()
+
+    vis.plot_histogram(df, 'LCP', bins=100)
+    vis.plot_histogram(df, 'FID', bins=100)
+    vis.plot_histogram(df, 'CLS', bins=100)
+
+    vis.plot_boxplot(df, 'LCP')
+    vis.plot_boxplot(df, 'FID')
+    vis.plot_boxplot(df, 'CLS')
+
+    vis.plot_qqplot(df, 'LCP')
+    vis.plot_qqplot(df, 'FID')
+    vis.plot_qqplot(df, 'CLS')
+
+
 def perform_descriptive_analysis(df: pd.DataFrame) -> pd.DataFrame:
     print("------------------Threshold Counts------------------")
     cwv_metrics = [
