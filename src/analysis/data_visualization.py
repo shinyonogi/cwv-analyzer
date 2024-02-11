@@ -1,28 +1,38 @@
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 import seaborn as sns
 import pandas as pd
 import numpy as np
 
-def plot_cwv_vs_rank(df: pd.DataFrame, metric: str) -> None:
+def plot_histogram(df: pd.DataFrame, column: str, bins: int) -> None:
     plt.figure(figsize=(10, 6))
-    plt.scatter(df['Rank'], df[metric], alpha=0.5)
-    plt.title(f'{metric} vs Rank')
-    plt.xlabel('Rank')
-    plt.ylabel(metric)
-    plt.show()
-
-def plot_cwv_distribution(df: pd.DataFrame, metric: str, bins: int) -> None:
-    plt.figure(figsize=(10, 6))
-    plt.hist(df[metric], bins=bins, edgecolor='black', alpha=0.7)
-    plt.title(f'Distribution of {metric}')
-    plt.xlabel(metric)
+    plt.hist(df[column], bins=bins, edgecolor='black', alpha=0.7)
+    plt.title(f'Distribution of {column}')
+    plt.xlabel(column)
     plt.ylabel('Frequency')
     plt.show()
 
-def plot_correlation_matrix(df: pd.DataFrame, title: str = 'Correlation Matrix') -> None:
+def plot_boxplot(df: pd.DataFrame, column: str) -> None:
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x=df[column])
+    plt.title(f'Boxplot of {column}')
+    plt.xlabel(column)
+    plt.show()
+
+def plot_qqplot(df: pd.DataFrame, column: str) -> None:
+    plt.figure(figsize=(10, 6))
+    stats.probplot(df[column], dist='norm', plot=plt)
+    plt.title(f'QQPlot of {column}')
+    plt.xlabel('Theoretical Quantiles')
+    plt.ylabel('Ordered Values')
+    plt.show()
+
+def plot_correlation_matrix(corr_matrix: pd.DataFrame) -> None:
     plt.figure(figsize=(10, 8))
-    numeric_df = df.select_dtypes(include=[np.number])
-    correlation_matrix = numeric_df.corr()
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
-    plt.title(title)
+    mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
+    sns.heatmap(corr_matrix, mask=mask, annot=True, fmt='.2f', cmap='coolwarm', square=True,
+                annot_kws={'size': 14},
+                cbar_kws={"shrink": 0.8, "aspect": 10},
+                vmax=1
+                )
     plt.show()

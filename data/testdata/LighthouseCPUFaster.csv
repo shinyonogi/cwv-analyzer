@@ -1,0 +1,13 @@
+Rank,Domain,LCP,FID,CLS
+1,google.com,3588.6243749999994,16,0.0677432330679472
+2,amazonaws.com,20570.148899999997,276,null
+3,facebook.com,4612.92865,21,null
+4,microsoft.com,4597.084599999998,28,0.4374536620728146
+5,apple.com,12924.747850000002,22,0.16404279910570826
+6,googleapis.com,null,null,null
+7,youtube.com,7385.099749999999,82,0.043259670154701176
+8,akamaiedge.net,null,null,null
+9,a-msedge.net,null,null,null
+10,twitter.com,9019.985999999997,91,0.005672900435035464
+11,akamai.net,null,null,null
+12,googlevideo.com,2289.7212999999997,61,null

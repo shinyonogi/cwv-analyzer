@@ -39,8 +39,8 @@ async function closeBrowser(browser: Browser): Promise<void> {
  * Logs the process of opening and navigating to the page. In case of a navigation error,
  * the opened page is closed and the error is rethrown.
  */
-async function openPageWithBrowser(browser: Browser, domain: string): Promise<Page> {
-    const url: string = `https://www.${domain}`;
+async function openPageWithBrowser(browser: Browser, url: string): Promise<Page> {
+    //const url: string = `https://www.${domain}`;
 
     const page: Page = await browser.newPage();
     console.log('New Page initiated');

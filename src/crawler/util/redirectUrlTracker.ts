@@ -1,29 +1,29 @@
 import axios, { AxiosError } from 'axios';
 
 interface IUrl {
-    _url: string;
-    get url(): string;
-    checkUrl(): Promise<void>;
+    _url: string | null;
+    get url(): string | null;
+    preCheckUrl(): Promise<void>;
 }
 
-export default async function urlFactory(domain: string): Promise<string> {
+export default async function urlPreCheckFactory(domain: string): Promise<string | null> {
     const url: IUrl = {
         _url: domain,
         get url() { return this._url; },
-        checkUrl: checkUrl
+        preCheckUrl: preCheckUrl
     }
-    await url.checkUrl();
+    await url.preCheckUrl();
     return url.url;
 }
 
-async function checkUrl(this: IUrl): Promise<void> {
+async function preCheckUrl(this: IUrl): Promise<void> {
     const prefixes = ['https://www.', 'https://', 'http://www.', 'http://'];
     for (const prefix of prefixes) {
       try {
         const fullUrl = prefix + this._url;
         const response = await axios.get(fullUrl, {
           maxRedirects: 5,
-          timeout: 5000
+          timeout: 10000
         });
 
         if (response.status === 200 || (response.status >= 300 && response.status < 400)) {
@@ -35,7 +35,7 @@ async function checkUrl(this: IUrl): Promise<void> {
         else console.error(`Failed to fetch ${prefix}${this._url}: ${error}`);
       }
     }
-    console.log(`Url ${this._url} seems not working. It will still try to access with the given url.`);
-    this._url = `https://${this._url}`;
+    console.log(`Url pre-checking did not work for ${this._url}`);
+    this._url = null;
 }
 

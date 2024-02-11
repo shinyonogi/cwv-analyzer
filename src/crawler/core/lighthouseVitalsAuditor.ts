@@ -10,7 +10,9 @@ export default async function measureCWVWithPuppeteerAndLighthouse(browser: Brow
 
     try {
         page = await openPageWithBrowser(browser, domain);
+        console.log(`Navigation to ${domain} with Puppeteer was successful`);
         csvResults = await measureCWVOnBrowserPage(browser, page);
+        console.log(`Measurement with Lighthouse was successfull for ${domain}:`, csvResults);
     }catch (pageError) {
         console.error(`Error processing domain ${domain}:`, pageError);
     }finally {
@@ -71,28 +73,80 @@ async function measureCWVOnBrowserPage(browser: Browser, page: Page): Promise<IC
  * - screenEmulation: Screen properties for emulation.
  */
 function configureLighthouseOptions(port: number): LighthouseOptions {
+    // The main version used for the thesis
     const LIGHTHOUSE_OPTIONS: LighthouseOptions = {
         logLevel: 'info',
         output: 'json',
         onlyCategories: ['performance'],
         port: port,
         throttling: {
-            rttMs: 40,
-            throughputKbps: 10240,
-            cpuSlowdownMultiplier: 1,
-            requestLatencyMs: 20,
-            downloadThroughputKbps: 10240,
-            uploadThroughputKbps: 10240,
+            rttMs: 150,
+            throughputKbps: 1.6 * 1024,
+            cpuSlowdownMultiplier: 4,
+            requestLatencyMs: 150 * 3.75,
+            downloadThroughputKbps: 1.6 * 1024 * 0.9,
+            uploadThroughputKbps: 750 * 0.9,
         },
-        formFactor: 'desktop',
+        formFactor: 'mobile',
         screenEmulation: {
-            mobile: false,
-            width: 1350,
-            height: 940,
-            deviceScaleFactor: 1,
+            mobile: true,
+            width: 412,
+            height: 823,
+            deviceScaleFactor: 1.75,
             disabled: false
         },
     };
+
+    /*
+    // Alternative 1 for Testing (Better Networking Conditions)
+     const LIGHTHOUSE_OPTIONS: LighthouseOptions = {
+         logLevel: 'info',
+         output: 'json',
+         onlyCategories: ['performance'],
+         port: port,
+         throttling: {
+             rttMs: 40,
+             throughputKbps: 10 * 10240,
+             cpuSlowdownMultiplier: 4,
+             requestLatencyMs: 150 * 3.75,
+             downloadThroughputKbps: 10 * 10240 * 0.9,
+             uploadThroughputKbps: 7500 * 0.9,
+        },
+        formFactor: 'mobile',
+        screenEmulation: {
+            mobile: true,
+            width: 412,
+            height: 823,
+            deviceScaleFactor: 1.75,
+            disabled: false
+        },
+    };
+
+
+    // ALternative 2 for Testing (Better CPU Conditions)
+     const LIGHTHOUSE_OPTIONS: LighthouseOptions = {
+         logLevel: 'info',
+         output: 'json',
+         onlyCategories: ['performance'],
+         port: port,
+         throttling: {
+             rttMs: 150,
+             throughputKbps: 1.6 * 1024,
+             cpuSlowdownMultiplier: 1,
+             requestLatencyMs: 150 * 3.75,
+             downloadThroughputKbps: 1.6 * 1024 * 0.9,
+             uploadThroughputKbps: 750 * 0.9,
+         },
+        formFactor: 'mobile',
+        screenEmulation: {
+            mobile: true,
+            width: 412,
+            height: 823,
+            deviceScaleFactor: 1.75,
+            disabled: false
+        },
+    };
+    */
 
     return LIGHTHOUSE_OPTIONS;
 }

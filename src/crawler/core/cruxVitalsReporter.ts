@@ -5,37 +5,62 @@ import { chromeuxreport_v1, google } from 'googleapis';
 import { GaxiosError } from 'gaxios';
 
 import { ICWVResults } from "../main.js";
-import urlFactory from '../util/redirectUrlTracker.js';
+import urlPreCheckFactory from '../util/redirectUrlTracker.js';
 
 const GOOGLE_CLOUD_API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
+
+export interface ICrUXCWVResults {
+    lcp: number | null;
+    fid: number | null;
+    cls: number | null;
+    validLink: string | null;
+};
 
 /**
  * Fetches Core Web Vitals data from the Chrome UX Report for a given domain.
  * @param domain The domain to fetch the Core Web Vitals for.
  * @returns A promise resolving to the Core Web Vitals results.
  */
-export default async function fetchCWVFromCrUX(domain: string): Promise<ICWVResults> {
-    const url: string = await urlFactory(domain);
+export async function fetchCWVFromCrUX(domain: string): Promise<ICrUXCWVResults> {
+    const url: string | null = await urlPreCheckFactory(domain);
 
-    try {
-        console.log(`Fetching CWV Metrics from CrUX for ${url}`);
-        const crUXAPIResponse = await getChromeUXReportForUrl(url);
-        const crUXMetrics = crUXAPIResponse.data.record?.metrics;
-        const crUXCWVResults: ICWVResults = {
-            lcp: getLCP(crUXMetrics),
-            fid: getFID(crUXMetrics),
-            cls: getCLS(crUXMetrics)
+    if (url) {
+        try {
+            const cwvResultsCrux: ICWVResults = await fetchCWVFromCrUXForUrl(url);
+            return {...cwvResultsCrux, validLink: url};
+        }catch (apiError) {
+            if (apiError instanceof GaxiosError) console.error('Error Fetching CWV Metrics from CrUX', apiError.status);
+            else console.error('Error Fetching CWV Metrics from CrUX', apiError);
+
+            return { lcp: null, fid: null, cls: null, validLink: null };
         }
-        return crUXCWVResults;
-    }catch (apiError) {
-        if (apiError instanceof GaxiosError) {
-            //console.error('Error Fetching CWV Metrics from CrUX', apiError);
-            console.error('Error Fetching CWV Metrics from CrUX', apiError.status);
+    }else {
+        const prefixes = ['https://www.', 'https://', 'http://www.', 'http://'];
+        for (const prefix of prefixes) {
+            try {
+                const fullUrl = prefix + domain;
+                const cwvResultsCrux: ICWVResults = await fetchCWVFromCrUXForUrl(fullUrl);
+                return {...cwvResultsCrux, validLink: fullUrl};
+            } catch (error) {
+                if (error instanceof GaxiosError) console.log(`Failed to fetch ${prefix}${domain}: ${error}`);
+                else console.error(`Failed to fetch ${prefix}${domain}: ${error}`);
+            }
         }
-        else
-            console.error('Error Fetching CWV Metrics from CrUX', apiError);
-        return { lcp: null, fid: null, cls: null };
+        console.log(`Failed to fetch CWV Metrics from CrUX for ${domain}`);
+        return { lcp: null, fid: null, cls: null, validLink: null };
     }
+}
+
+async function fetchCWVFromCrUXForUrl(url: string): Promise<ICWVResults> {
+    console.log(`Fetching CWV Metrics from CrUX for ${url}`);
+    const crUXAPIResponse = await getChromeUXReportForUrl(url);
+    const crUXMetrics = crUXAPIResponse.data.record?.metrics;
+    const crUXCWVResults: ICWVResults = {
+        lcp: getLCP(crUXMetrics),
+        fid: getFID(crUXMetrics),
+        cls: getCLS(crUXMetrics)
+    }
+    return crUXCWVResults;
 }
 
 /**

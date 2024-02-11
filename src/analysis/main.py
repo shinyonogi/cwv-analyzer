@@ -1,28 +1,50 @@
-import data_processing as dp
+import pandas as pd
+
+import data_preprocessing as dp
 import data_analysis as da
 import data_visualization as vis
 
-VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReport.csv';
+CRUX_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportCrUX.csv'
+CRAWLER_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportLighthouse.csv'
+
+def analyze_data(data_csv_file_path: str) -> None:
+    print("Starting Analysis...")
+    df = pd.read_csv(data_csv_file_path, on_bad_lines='error')
+
+    # Explanatory Data Analysis (EDA)
+    #dp.eda(df_for_crux)
+
+    # Data Preprocessing
+    df = dp.preprocess_data(df)
+    df_outliers_removed = dp.remove_outliers(df.copy())
+
+    #dp.eda(df_for_crux_without_outliers)
+
+    # Descriptive Statistics
+    da.perform_descriptive_analysis(df)
+
+    # Spearman's Correlation
+    da.perform_correlation_analyis_spearman(df)
+    da.perform_correlation_analyis_spearman(df_outliers_removed)
+
+    # Multiple Regression Analysis
+    da.perform_multiple_regresion_analysis(df)
+    da.perform_multiple_regresion_analysis(df_outliers_removed)
+
+    # Interval Analysis
+    da.perform_cross_interval_analysis(df_outliers_removed, 100)
+    da.perform_cross_interval_analysis(df_outliers_removed, 1000)
+    da.perform_cross_interval_analysis(df_outliers_removed, 10000)
+
+    da.perform_intra_interval_analysis(df_outliers_removed, 100)
+    da.perform_intra_interval_analysis(df_outliers_removed, 1000)
+    da.perform_intra_interval_analysis(df_outliers_removed, 10000)
+
+    print("Analysis Completed.")
 
 def main() -> None:
-    df = dp.load_data(VITALS_REPORT_CSV_FILE_PATH)
-    df = dp.clean_data(df)
-
-    """
-    descriptive_stats = da.compute_descriptive_statistics(df)
-    print("Descriptive Stats: \n", descriptive_stats)
-
-    ranking_correlation = da.analyze_ranking_correlation(df)
-    print("Ranking Correlation:\n", ranking_correlation)
-    """
-
-    for metric in ['LCP', 'FID', 'CLS']:
-        vis.plot_cwv_vs_rank(df, metric)
-
-    for metric in ['LCP', 'FID', 'CLS']:
-        vis.plot_cwv_distribution(df, metric, bins=50)
-
-    vis.plot_correlation_matrix(df)
+    #analyze_data(CRUX_VITALS_REPORT_CSV_FILE_PATH)
+    analyze_data(CRAWLER_VITALS_REPORT_CSV_FILE_PATH)
 
 if __name__ == "__main__":
     main()
