@@ -1,8 +1,7 @@
 import pandas as pd
 
-import analysis.core.data_preprocessing as dp
-import analysis.core.data_analysis as da
-import analysis.core.data_visualization as vis
+import data_preprocessing as dp
+import data_analysis as da
 
 CRUX_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportCrUX.csv'
 CRAWLER_VITALS_REPORT_CSV_FILE_PATH = './data/final/CoreWebVitalsReportLighthouse.csv'

@@ -1,8 +1,8 @@
 import pandas as pd
 import statsmodels.api as sm
 
-import util as util
 import data_visualization as vis
+import util as util
 
 def eda(df: pd.DataFrame) -> None:
     expected_ranks = range(1, 100000)
