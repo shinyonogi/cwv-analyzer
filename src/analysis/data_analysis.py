@@ -2,6 +2,7 @@ import pandas as pd
 import statsmodels.api as sm
 
 import data_visualization as vis
+import data_preprocessing as dp
 import util as util
 
 def eda(df: pd.DataFrame) -> None:
@@ -57,13 +58,13 @@ def perform_correlation_analyis_spearman(df: pd.DataFrame) -> pd.DataFrame:
     print("------------------Spearman's Correlation Analysis------------------")
     df_reversed = util.reverse_rank(df)
     corr_matrix = df_reversed.corr(method='spearman')
-    print(corr_matrix)
-    #vis.plot_correlation_matrix(corr_matrix)
+    #print(corr_matrix)
+    vis.plot_correlation_matrix(corr_matrix)
 
 
 def perform_multiple_regresion_analysis(df: pd.DataFrame) -> None:
     print("------------------Multiple Regression Analysis------------------")
-    df_standardized = df.copy()
+    df_standardized = dp.standardize(df.copy())
     df_without_nan = df_standardized.dropna()
     X = df_without_nan[['LCP', 'FID', 'CLS']]
     Y = df_without_nan['Rank']
@@ -82,10 +83,15 @@ def perform_cross_interval_analysis(df: pd.DataFrame, interval_size: int) -> Non
             print(perform_descriptive_analysis(df))
             print()
 
-    df_aggregated_intervals = util.aggregate_intervals_to_mean(df_splitted)
-    perform_correlation_analyis_spearman(df_aggregated_intervals)
+    print(f'Aggregating {interval_size} intervals to mean...')
+    df_aggregated_intervals_mean = util.aggregate_intervals_to_mean(df_splitted)
+    perform_correlation_analyis_spearman(df_aggregated_intervals_mean)
+    perform_multiple_regresion_analysis(df_aggregated_intervals_mean)
 
-    perform_multiple_regresion_analysis(df_aggregated_intervals)
+    print(f'Aggregating {interval_size} intervals to median...')
+    df_aggregated_intervals_median = util.aggregate_intervals_to_median(df_splitted)
+    perform_correlation_analyis_spearman(df_aggregated_intervals_median)
+    perform_multiple_regresion_analysis(df_aggregated_intervals_median)
 
 
 def perform_intra_interval_analysis(df: pd.DataFrame, interval_size: int) -> None:

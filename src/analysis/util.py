@@ -38,3 +38,11 @@ def aggregate_intervals_to_mean(splitted_dataframe: list) -> pd.DataFrame:
         interval_mean['Rank'] = i+1
         intervals_data.append(interval_mean)
     return pd.DataFrame(intervals_data)
+
+def aggregate_intervals_to_median(splitted_dataframe: list) -> pd.DataFrame:
+    intervals_data = []
+    for i, df_i in enumerate(splitted_dataframe):
+        interval_median = df_i[['LCP', 'FID', 'CLS']].median().to_dict()
+        interval_median['Rank'] = i+1
+        intervals_data.append(interval_median)
+    return pd.DataFrame(intervals_data)
